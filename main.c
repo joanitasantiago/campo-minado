@@ -24,6 +24,7 @@ int main(int argc, char const *argv[])
 
     /* * * Setting the bombs * * */
     distributeBombs(maxBombs, row, column, board);
+    incrementNeighbors(row, column, board);
 
 
     /* * * TESTE * * */
@@ -32,9 +33,8 @@ int main(int argc, char const *argv[])
         for (int j = 0; j < column; j++)
         {
             printf("-> POSIÇÃO [%d][%d]:", i, j);
-            printf("ABERTO?: %d | BOMBA?: %d <-\n", board[i][j].isOpen, board[i][j].isBomb);
+            printf("BOMBAS PERTO: %d <-\n", board[i][j].bombsAround);
         }
-        
         printf("\n");
     }
 

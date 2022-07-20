@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
+#include <stdlib.h>
 #include "board.h"
 #include "playersettings.h"
 
@@ -23,6 +25,25 @@ void defineRowsAndColumns(int gameDifficulty, int *row, int *column)
         *column = 16;
         break;
     }
+}
+
+/*Set the amount of bombs on the board based on the chosen difficulty*/
+int defineAmountOfBombs(int gameDifficulty)
+{
+    int maxBombs;
+    switch (gameDifficulty)
+    {
+    case 1:
+        maxBombs = 10;
+        break;
+    case 2:
+        maxBombs = 40;
+        break;
+    case 3:
+        maxBombs = 99;
+        break;
+    }
+    return maxBombs;
 }
 
 /*Set default settings on the board*/
@@ -122,6 +143,61 @@ void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns
                     board[i][j].neighbors[2] = &board[i][j - 1];
                 }
             }
+        }
+    }
+}
+
+int generateRandomColumn(int maxBombs)
+{
+    srand(time(NULL));
+    int newColumn;
+    switch (maxBombs)
+    {
+    case 10:
+
+        newColumn = 1 + (rand() % 9);
+        break;
+    case 40:
+        newColumn = 1 + (rand() % 16);
+        break;
+    case 3:
+        newColumn = 1 + (rand() % 16);
+        break;
+    }
+    return newColumn;
+}
+
+int generateRandomRow(int maxBombs)
+{
+    srand(time(NULL));
+    int newRow;
+    switch (maxBombs)
+    {
+    case 10:
+
+        newRow = 1 + (rand() % 9);
+        break;
+    case 40:
+        newRow = 1 + (rand() % 16);
+        break;
+    case 3:
+        newRow = 1 + (rand() % 30);
+        break;
+    }
+    return newRow;
+}
+
+void distributeBombs(int maxBombs, int row, int column, Cell board[row][column])
+{
+    int newRow, newColumn, i = 0;
+    while (i <= maxBombs)
+    {
+        newRow = generateRandomRow(maxBombs);
+        newColumn = generateRandomColumn(maxBombs);
+        if (board[newRow][newColumn].isOpen == false && board[newRow][newColumn].isBomb == false)
+        {
+            board[newRow][newColumn].isBomb = true;
+            i++;
         }
     }
 }

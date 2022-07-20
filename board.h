@@ -18,7 +18,11 @@ typedef struct cell
 /* * *  F U N C T I O N S * * */
 
 void defineRowsAndColumns(int gameDifficulty, int *row, int *column);
+int defineAmountOfBombs(int gameDifficulty);
 void settingBoard(int row, int column, Cell board[row][column]);
 void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+int generateRandomColumn(int maxBombs);
+int generateRandomRow(int maxBombs);
+void distributeBombs(int maxBombs, int row, int column, Cell board[row][column]);
 
 #endif

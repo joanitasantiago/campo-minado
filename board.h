@@ -25,5 +25,9 @@ int generateRandomColumn(int maxBombs);
 int generateRandomRow(int maxBombs);
 void distributeBombs(int maxBombs, int row, int column, Cell board[row][column]);
 void incrementNeighbors(int row, int column, Cell board[row][column]);
+void printBoard(int row, int column, Cell board[row][column]);
+void printColumnPositions(int column);
+void printRowPosition(int row);
+void printLine(int column);
 
 #endif

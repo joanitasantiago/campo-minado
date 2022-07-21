@@ -163,14 +163,13 @@ int generateRandomColumn(int maxBombs)
     switch (maxBombs)
     {
     case 10:
-
-        newColumn = 1 + (rand() % 9);
+        newColumn = (rand() % 9);
         break;
     case 40:
-        newColumn = 1 + (rand() % 16);
+        newColumn = (rand() % 16);
         break;
     case 3:
-        newColumn = 1 + (rand() % 16);
+        newColumn = (rand() % 16);
         break;
     }
     return newColumn;
@@ -184,13 +183,13 @@ int generateRandomRow(int maxBombs)
     {
     case 10:
 
-        newRow = 1 + (rand() % 9);
+        newRow = (rand() % 9);
         break;
     case 40:
-        newRow = 1 + (rand() % 16);
+        newRow = (rand() % 16);
         break;
     case 3:
-        newRow = 1 + (rand() % 30);
+        newRow = (rand() % 30);
         break;
     }
     return newRow;
@@ -229,4 +228,63 @@ void incrementNeighbors(int row, int column, Cell board[row][column])
             }
         }
     }
+}
+
+void printBoard(int row, int column, Cell board[row][column])
+{
+    printColumnPositions(column);
+    printLine(column);
+    for (int i = 0; i < row; i++)
+    {
+        printRowPosition(i);
+        for (int j = 0; j < column; j++)
+        {
+            if (board[i][j].isOpen == false)
+            {
+                printf("|_|");
+            }
+            else
+            {
+                if (board[i][j].isBomb == true)
+                {
+                    printf("|*|");
+                }
+                else
+                {
+                    {
+                        printf("|%d|", board[i][j].bombsAround);
+                    }
+                }
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+/*Prints a top bar with column positions */
+void printColumnPositions(int column)
+{
+    printf("\n\t");
+    for (int i = 0; i < column; i++)
+    {
+        printf("[%d] ", i); /* imprime uma barra superior com as posições X */
+    }
+    printf("\n\n");
+}
+
+/*Prints a sidebar with a single row position*/
+void printRowPosition(int row)
+{
+    printf("[%d]\t", row);
+}
+
+void printLine(int column)
+{
+    printf("\t");
+    for (int i = 0; i < column; i++)
+    {
+        printf(" _ ");
+    }
+    printf("\n");
 }

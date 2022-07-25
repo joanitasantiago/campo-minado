@@ -10,9 +10,17 @@
 
 /* * *  F U N C T I O N S * * */
 
-int defineDifficulty();
-void playerChooseCellToOpen(int row, int column, Cell board[row][column]);
-void checkValidRowAndColumn(int row, int column, int *selectedRow, int *selectedColumn);
+/* * * BOARD SETTINGS * * */
 
+int PlayerDefinesGameDifficulty();
+void defineRowsAndColumns(int gameDifficulty, int *row, int *column);
+int defineAmountOfBombs(int gameDifficulty);
+
+
+/* * * GAMEPLAY * * */
+
+void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened);
+void checkValidRowAndColumn(int row, int column, int *rowToBeChecked, int *columnToBeChecked);
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column]);
 
 #endif

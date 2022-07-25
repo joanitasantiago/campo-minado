@@ -5,46 +5,9 @@
 #include "board.h"
 #include "playersettings.h"
 
-/* * *  F U N C T I O N S * * */
+/* * * F U N C T I O N S * * */
 
-/*Define the number of rows and columns that will form the board based on the difficulty chosen by the user*/
-void defineRowsAndColumns(int gameDifficulty, int *row, int *column)
-{
-    switch (gameDifficulty)
-    {
-    case 1:
-        *row = 9;
-        *column = 9;
-        break;
-    case 2:
-        *row = 16;
-        *column = 16;
-        break;
-    case 3:
-        *row = 30;
-        *column = 16;
-        break;
-    }
-}
-
-/*Set the amount of bombs on the board based on the chosen difficulty*/
-int defineAmountOfBombs(int gameDifficulty)
-{
-    int maxBombs;
-    switch (gameDifficulty)
-    {
-    case 1:
-        maxBombs = 10;
-        break;
-    case 2:
-        maxBombs = 40;
-        break;
-    case 3:
-        maxBombs = 99;
-        break;
-    }
-    return maxBombs;
-}
+/* * * BOARD SETTINGS * * */
 
 /*Set default settings on the board*/
 void settingBoard(int row, int column, Cell board[row][column])
@@ -158,7 +121,6 @@ void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns
 
 int generateRandomColumn(int maxBombs)
 {
-    srand(time(NULL));
     int newColumn;
     switch (maxBombs)
     {
@@ -177,7 +139,6 @@ int generateRandomColumn(int maxBombs)
 
 int generateRandomRow(int maxBombs)
 {
-    srand(time(NULL));
     int newRow;
     switch (maxBombs)
     {
@@ -230,6 +191,9 @@ void incrementNeighbors(int row, int column, Cell board[row][column])
     }
 }
 
+
+ /* * * SCREEN INTERACTIONS * * */
+
 void printBoard(int row, int column, Cell board[row][column])
 {
     printColumnPositions(column);
@@ -268,7 +232,7 @@ void printColumnPositions(int column)
     printf("\n\t");
     for (int i = 0; i < column; i++)
     {
-        printf("[%d] ", i); /* imprime uma barra superior com as posições X */
+        printf("[%d]", i); /* imprime uma barra superior com as posições X */
     }
     printf("\n\n");
 }
@@ -288,3 +252,6 @@ void printLine(int column)
     }
     printf("\n");
 }
+
+
+/* * * GAMEPLAY * * */

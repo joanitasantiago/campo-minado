@@ -21,6 +21,5 @@ int defineAmountOfBombs(int gameDifficulty);
 
 void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened);
 void checkValidRowAndColumn(int row, int column, int *rowToBeChecked, int *columnToBeChecked);
-void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column]);
 
 #endif

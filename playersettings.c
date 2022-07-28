@@ -89,9 +89,3 @@ void checkValidRowAndColumn(int row, int column, int *rowToBeChecked, int *colum
         *columnToBeChecked = tempColumn;
     }
 }
-
-/*Open a cell according to the number entered by the user */
-void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column])
-{
-    board[rowToBeOpened][columnToBeOpened].isOpen = true;
-}

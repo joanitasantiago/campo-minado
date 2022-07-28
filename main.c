@@ -26,13 +26,43 @@ int main(int argc, char const *argv[])
     playerTypesRowAndColumn(&rowToBeOpened, &columnToBeOpened);
     checkValidRowAndColumn(row, column, &rowToBeOpened, &columnToBeOpened);
     openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, row, column, board);
-
-    /* * * Setting the bombs * * */
     distributeBombs(maxBombs, row, column, board);
     incrementNeighbors(row, column, board);
+    openNeighbors(rowToBeOpened, columnToBeOpened, row, column, board);
+
+    /*TESTE
+    int k = 0;
+    for (int i = 0; i < row; i++)
+    {
+        for(int j = 0; j < column; j++)
+        {
+            printf("CELULA [%d] [%d]:\n", i, j);
+            while (board[i][j].neighbors[k] != NULL)
+            {
+                printf("VIZINHO %d > ", k);
+                printf("isBomb: %d | ", board[i][j].neighbors[k]->isBomb);
+                printf("isOpen: %d | ", board[i][j].neighbors[k]->isOpen);
+                printf("bombsAround: %d | ", board[i][j].neighbors[k]->bombsAround);
+                printf("cellrow: %d | ", board[i][j].neighbors[k]->cellrow);
+                printf("cellcolumn: %d |\n", board[i][j].neighbors[k]->cellcolumn);
+                k++;
+            }
+            k = 0;
+            printf("\n");
+        }
+    }*/
     
     /* * *  Game start * * */
-    printBoard(row, column, board);
+    do
+    {
+        printBoard(row, column, board);
+        playerTypesRowAndColumn(&rowToBeOpened, &columnToBeOpened);
+        checkValidRowAndColumn(row, column, &rowToBeOpened, &columnToBeOpened);
+        openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, row, column, board);
+        openNeighbors(rowToBeOpened, columnToBeOpened, row, column, board);
+        printf("FIIIIMMMMMM");
+    } while (1);
+    
 
     return 0;
 }

@@ -8,6 +8,8 @@ typedef struct cell
     bool isBomb;
     bool isOpen;
     int bombsAround;
+    int cellrow;
+    int cellcolumn;
     struct cell *neighbors[10];
 } Cell;
 
@@ -31,5 +33,7 @@ void printRowPosition(int row);
 void printLine(int column);
 
 /* * * GAMEPLAY * * */
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column]);
+void openNeighbors(int selectedRow, int selectedColumn, int row, int column, Cell board[row][column]);
 
 #endif

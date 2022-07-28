@@ -19,6 +19,8 @@ void settingBoard(int row, int column, Cell board[row][column])
             board[i][j].isBomb = false;
             board[i][j].isOpen = false;
             board[i][j].bombsAround = 0;
+            board[i][j].cellrow = i;
+            board[i][j].cellcolumn = j;
         }
     }
 }
@@ -112,7 +114,7 @@ void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns
                     board[i][j].neighbors[0] = &board[i - 1][j - 1];
                     board[i][j].neighbors[1] = &board[i - 1][j];
                     board[i][j].neighbors[2] = &board[i][j - 1];
-                    board[i][j].neighbors[4] = NULL;
+                    board[i][j].neighbors[3] = NULL;
                 }
             }
         }
@@ -191,8 +193,7 @@ void incrementNeighbors(int row, int column, Cell board[row][column])
     }
 }
 
-
- /* * * SCREEN INTERACTIONS * * */
+/* * * SCREEN INTERACTIONS * * */
 
 void printBoard(int row, int column, Cell board[row][column])
 {
@@ -253,5 +254,34 @@ void printLine(int column)
     printf("\n");
 }
 
-
 /* * * GAMEPLAY * * */
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column])
+{
+    if (board[rowToBeOpened][columnToBeOpened].isOpen == true)
+    {
+        printf(" > IT'S ALREADY OPEN <");
+    }
+    else
+    {
+        board[rowToBeOpened][columnToBeOpened].isOpen = true;
+    }
+}
+
+void openNeighbors(int selectedRow, int selectedColumn, int row, int column, Cell board[row][column])
+{
+    int k = 0;
+    Cell atual = board[selectedRow][selectedColumn];
+    if (atual.bombsAround == 0)
+    {
+        while (atual.neighbors[k] != NULL)
+        {
+            Cell *vizinho = atual.neighbors[k];
+            if (vizinho->isBomb == false && vizinho->isOpen == false)
+            {
+                vizinho->isOpen = true;
+                openNeighbors(vizinho->cellrow, vizinho->cellcolumn, row, column, board);
+            }
+            k++;
+        }
+    }
+}

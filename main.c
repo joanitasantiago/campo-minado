@@ -8,61 +8,52 @@
 int main(int argc, char const *argv[])
 {
     /* * *  Variables * * */
-    int gameDifficulty, maxBombs, row, column, rowToBeOpened, columnToBeOpened;
+    int gameDifficulty, maxBombs, maxRows, maxColumns, rowToBeOpened, columnToBeOpened, play = 1, gameOver = 0, gameWin = 0;
     srand(time(NULL));
 
-    /* * *  Configuring player settings * * */
-    gameDifficulty = PlayerDefinesGameDifficulty();
-    defineRowsAndColumns(gameDifficulty, &row, &column);
-    maxBombs = defineAmountOfBombs(gameDifficulty);
-
-    /* * *  Creating the board * * */
-    Cell board[row][column];
-    settingBoard(row, column, board);
-    assignNeighbors(row, column, board);
-
-    /* * *  First user move  * * */
-    printBoard(row, column, board);
-    playerTypesRowAndColumn(&rowToBeOpened, &columnToBeOpened);
-    checkValidRowAndColumn(row, column, &rowToBeOpened, &columnToBeOpened);
-    openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, row, column, board);
-    distributeBombs(maxBombs, row, column, board);
-    incrementNeighbors(row, column, board);
-    openNeighbors(rowToBeOpened, columnToBeOpened, row, column, board);
-
-    /*TESTE
-    int k = 0;
-    for (int i = 0; i < row; i++)
+    while (play == 1)
     {
-        for(int j = 0; j < column; j++)
-        {
-            printf("CELULA [%d] [%d]:\n", i, j);
-            while (board[i][j].neighbors[k] != NULL)
-            {
-                printf("VIZINHO %d > ", k);
-                printf("isBomb: %d | ", board[i][j].neighbors[k]->isBomb);
-                printf("isOpen: %d | ", board[i][j].neighbors[k]->isOpen);
-                printf("bombsAround: %d | ", board[i][j].neighbors[k]->bombsAround);
-                printf("cellrow: %d | ", board[i][j].neighbors[k]->cellrow);
-                printf("cellcolumn: %d |\n", board[i][j].neighbors[k]->cellcolumn);
-                k++;
-            }
-            k = 0;
-            printf("\n");
-        }
-    }*/
-    
-    /* * *  Game start * * */
-    do
-    {
-        printBoard(row, column, board);
+        /* * *  Configuring player settings * * */
+        gameDifficulty = playerDefinesGameDifficulty();
+        defineRowsAndColumns(gameDifficulty, &maxRows, &maxColumns);
+        maxBombs = defineAmountOfBombs(gameDifficulty);
+
+        /* * *  Creating the board * * */
+        Cell board[maxRows][maxColumns];
+        setBoard(maxRows, maxColumns, board);
+
+        /* * *  First user move  * * */
+        printBoard(maxRows, maxColumns, board);
         playerTypesRowAndColumn(&rowToBeOpened, &columnToBeOpened);
-        checkValidRowAndColumn(row, column, &rowToBeOpened, &columnToBeOpened);
-        openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, row, column, board);
-        openNeighbors(rowToBeOpened, columnToBeOpened, row, column, board);
-        printf("FIIIIMMMMMM");
-    } while (1);
-    
+        checkValidRowAndColumn(maxRows, maxColumns, &rowToBeOpened, &columnToBeOpened);
+        checkIfCellIsAlreadyOpen(&rowToBeOpened, &columnToBeOpened, maxRows, maxColumns, board);
+        openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, maxRows, maxColumns, board);
+        distributeBombs(maxBombs, maxRows, maxColumns, board);
+        incrementNeighbors(maxRows, maxColumns, board);
+        openNeighbors(rowToBeOpened, columnToBeOpened, maxRows, maxColumns, board);
 
+        /* * *  Game start * * */
+        while (gameWin == 0 || gameOver == 0)
+        {
+            printBoard(maxRows, maxColumns, board);
+            playerTypesRowAndColumn(&rowToBeOpened, &columnToBeOpened);
+            checkValidRowAndColumn(maxRows, maxColumns, &rowToBeOpened, &columnToBeOpened);
+            checkIfCellIsAlreadyOpen(&rowToBeOpened, &columnToBeOpened, maxRows, maxColumns, board);
+            openCellChosenbyPlayer(rowToBeOpened, columnToBeOpened, maxRows, maxColumns, board);
+            checkIfItsBomb(&gameOver, rowToBeOpened, columnToBeOpened, maxRows, maxColumns, board);
+            if (gameOver == 1)
+            {
+                playAgainOrClose(&play);
+                break;
+            }
+            openNeighbors(rowToBeOpened, columnToBeOpened, maxRows, maxColumns, board);
+            checkWin(&gameWin, maxRows, maxColumns, board);
+            if (gameWin == 1)
+            {
+                printf("\nCongratulations! You won :)\n");
+                playAgainOrClose(&play);
+            }
+        }
+    }
     return 0;
 }

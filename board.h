@@ -15,25 +15,26 @@ typedef struct cell
 
 /* * *  F U N C T I O N S * * */
 
-/* * * BOARD SETTINGS * * */
-
-void settingBoard(int row, int column, Cell board[row][column]);
+/* * * SETTINGS * * */
 void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 int generateRandomColumn(int maxBombs);
 int generateRandomRow(int maxBombs);
-void distributeBombs(int maxBombs, int row, int column, Cell board[row][column]);
-void incrementNeighbors(int row, int column, Cell board[row][column]);
+void distributeBombs(int maxBombs, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void incrementNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 
 
 /* * * SCREEN INTERACTIONS * * */
 
-void printBoard(int row, int column, Cell board[row][column]);
-void printColumnPositions(int column);
-void printRowPosition(int row);
-void printLine(int column);
+void printBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void printColumnPositions(int maxColumns);
+void printRowPosition(int maxRows);
+void printLine(int maxColumns);
 
 /* * * GAMEPLAY * * */
-void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column]);
-void openNeighbors(int selectedRow, int selectedColumn, int row, int column, Cell board[row][column]);
+void setBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void checkIfItsBomb(int *gameover, int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void checkWin(int *gameWin, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 
 #endif

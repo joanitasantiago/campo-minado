@@ -5,13 +5,12 @@
 #include "playersettings.h"
 #include "board.h"
 
-
 /* * * * * *  F U N C T I O N S  * * * * * */
 
 /* * * BOARD SETTINGS * * */
 
 /*Returns a user-entered number that refers to the chosen game difficulty*/
-int PlayerDefinesGameDifficulty()
+int playerDefinesGameDifficulty()
 {
     int difficulty;
     printf("Choose the board level:\n<1> EASY\n<2> INTERMEDIATE\n<3> EXPERT\n");
@@ -26,21 +25,21 @@ int PlayerDefinesGameDifficulty()
 }
 
 /*Define the number of rows and columns that will form the board based on the difficulty chosen by the user*/
-void defineRowsAndColumns(int gameDifficulty, int *row, int *column)
+void defineRowsAndColumns(int gameDifficulty, int *maxRows, int *maxColumns)
 {
     switch (gameDifficulty)
     {
     case 1:
-        *row = 9;
-        *column = 9;
+        *maxRows = 9;
+        *maxColumns = 9;
         break;
     case 2:
-        *row = 16;
-        *column = 16;
+        *maxRows = 16;
+        *maxColumns = 16;
         break;
     case 3:
-        *row = 30;
-        *column = 16;
+        *maxRows = 30;
+        *maxColumns = 16;
         break;
     }
 }
@@ -64,10 +63,9 @@ int defineAmountOfBombs(int gameDifficulty)
     return maxBombs;
 }
 
-
 /* * * GAMEPLAY * * */
 
-/* Asks the user to enter a row and column number */
+/* Asks the user to enter a maxRows and maxColumns number */
 void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened)
 {
     int tempRow, tempColumn;
@@ -78,14 +76,39 @@ void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened)
 }
 
 /* Checks if the number entered is valid */
-void checkValidRowAndColumn(int row, int column, int *rowToBeChecked, int *columnToBeChecked)
+void checkValidRowAndColumn(int maxRows, int maxColumns, int *selectedRow, int *selectedColumn)
 {
     int tempRow, tempColumn;
-    while ((*rowToBeChecked < 0) || (*rowToBeChecked > row) || (*columnToBeChecked < 0) || (*columnToBeChecked > column))
+    while ((*selectedRow < 0) || (*selectedRow > maxRows) || (*selectedColumn < 0) || (*selectedColumn > maxColumns))
     {
         printf("Invalid option - try again:\t");
         scanf(" %d %d", &tempRow, &tempColumn);
-        *rowToBeChecked = tempRow;
-        *columnToBeChecked = tempColumn;
+        *selectedRow = tempRow;
+        *selectedColumn = tempColumn;
     }
+}
+
+void checkIfCellIsAlreadyOpen(int *selectedRow, int *selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+{
+    int tempRow, tempColumn;
+    while (board[*selectedRow][*selectedColumn].isOpen == true)
+    {
+        printf("This cell it's already open - try again:\t");
+        scanf(" %d %d", &tempRow, &tempColumn);
+        *selectedRow = tempRow;
+        *selectedColumn = tempColumn;
+    }
+}
+
+void playAgainOrClose(int *play)
+{
+    int option;
+    printf("\nEnter [1] to play again or [0] to close the game >>\t");
+    scanf("%d", &option);
+    while (option < 0 || option > 1)
+    {
+        printf("\nInvalid option - try again >>\t");
+        scanf("%d", &option);
+    }
+    *play = option;
 }

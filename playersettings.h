@@ -12,7 +12,7 @@
 
 /* * * BOARD SETTINGS * * */
 
-int PlayerDefinesGameDifficulty();
+int playerDefinesGameDifficulty();
 void defineRowsAndColumns(int gameDifficulty, int *row, int *column);
 int defineAmountOfBombs(int gameDifficulty);
 
@@ -20,6 +20,8 @@ int defineAmountOfBombs(int gameDifficulty);
 /* * * GAMEPLAY * * */
 
 void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened);
-void checkValidRowAndColumn(int row, int column, int *rowToBeChecked, int *columnToBeChecked);
+void checkValidRowAndColumn(int maxRows, int maxColumns, int *selectedRow, int *selectedColumn);
+void checkIfCellIsAlreadyOpen(int *selectedRow, int *selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void playAgainOrClose(int *play);
 
 #endif

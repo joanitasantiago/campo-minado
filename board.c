@@ -7,23 +7,7 @@
 
 /* * * F U N C T I O N S * * */
 
-/* * * BOARD SETTINGS * * */
-
-/*Set default settings on the board*/
-void settingBoard(int row, int column, Cell board[row][column])
-{
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = 0; j < column; j++)
-        {
-            board[i][j].isBomb = false;
-            board[i][j].isOpen = false;
-            board[i][j].bombsAround = 0;
-            board[i][j].cellrow = i;
-            board[i][j].cellcolumn = j;
-        }
-    }
-}
+/* * * SETTINGS * * */
 
 /*Assigns the neighbors of each cell on the board and stores them in an array.*/
 void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
@@ -158,9 +142,9 @@ int generateRandomRow(int maxBombs)
     return newRow;
 }
 
-void distributeBombs(int maxBombs, int row, int column, Cell board[row][column])
+void distributeBombs(int maxBombs, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
 {
-    int newRow, newColumn, i = 0;
+    int newRow, newColumn, i = 1;
     while (i <= maxBombs)
     {
         newRow = generateRandomRow(maxBombs);
@@ -173,12 +157,12 @@ void distributeBombs(int maxBombs, int row, int column, Cell board[row][column])
     }
 }
 
-void incrementNeighbors(int row, int column, Cell board[row][column])
+void incrementNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
 {
     int i, j, k = 0;
-    for (i = 0; i < row; i++)
+    for (i = 0; i < maxRows; i++)
     {
-        for (j = 0; j < column; j++)
+        for (j = 0; j < maxColumns; j++)
         {
             if (board[i][j].isBomb == true)
             {
@@ -195,14 +179,14 @@ void incrementNeighbors(int row, int column, Cell board[row][column])
 
 /* * * SCREEN INTERACTIONS * * */
 
-void printBoard(int row, int column, Cell board[row][column])
+void printBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
 {
-    printColumnPositions(column);
-    printLine(column);
-    for (int i = 0; i < row; i++)
+    printColumnPositions(maxColumns);
+    printLine(maxColumns);
+    for (int i = 0; i < maxRows; i++)
     {
         printRowPosition(i);
-        for (int j = 0; j < column; j++)
+        for (int j = 0; j < maxColumns; j++)
         {
             if (board[i][j].isOpen == false)
             {
@@ -227,27 +211,27 @@ void printBoard(int row, int column, Cell board[row][column])
     printf("\n");
 }
 
-/*Prints a top bar with column positions */
-void printColumnPositions(int column)
+/*Prints a top bar with maxColumns positions */
+void printColumnPositions(int maxColumns)
 {
     printf("\n\t");
-    for (int i = 0; i < column; i++)
+    for (int i = 0; i < maxColumns; i++)
     {
         printf("[%d]", i); /* imprime uma barra superior com as posições X */
     }
     printf("\n\n");
 }
 
-/*Prints a sidebar with a single row position*/
-void printRowPosition(int row)
+/*Prints a sidebar with a single maxRows position*/
+void printRowPosition(int maxRows)
 {
-    printf("[%d]\t", row);
+    printf("[%d]\t", maxRows);
 }
 
-void printLine(int column)
+void printLine(int maxColumns)
 {
     printf("\t");
-    for (int i = 0; i < column; i++)
+    for (int i = 0; i < maxColumns; i++)
     {
         printf(" _ ");
     }
@@ -255,19 +239,30 @@ void printLine(int column)
 }
 
 /* * * GAMEPLAY * * */
-void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int row, int column, Cell board[row][column])
+
+/*Set default settings on board and call function to assign neighbors*/
+void setBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
 {
-    if (board[rowToBeOpened][columnToBeOpened].isOpen == true)
+    for (int i = 0; i < maxRows; i++)
     {
-        printf(" > IT'S ALREADY OPEN <");
+        for (int j = 0; j < maxColumns; j++)
+        {
+            board[i][j].isBomb = false;
+            board[i][j].isOpen = false;
+            board[i][j].bombsAround = 0;
+            board[i][j].cellrow = i;
+            board[i][j].cellcolumn = j;
+        }
     }
-    else
-    {
-        board[rowToBeOpened][columnToBeOpened].isOpen = true;
-    }
+    assignNeighbors(maxRows, maxColumns, board);
 }
 
-void openNeighbors(int selectedRow, int selectedColumn, int row, int column, Cell board[row][column])
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+{
+    board[rowToBeOpened][columnToBeOpened].isOpen = true;
+}
+
+void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
 {
     int k = 0;
     Cell atual = board[selectedRow][selectedColumn];
@@ -279,9 +274,41 @@ void openNeighbors(int selectedRow, int selectedColumn, int row, int column, Cel
             if (vizinho->isBomb == false && vizinho->isOpen == false)
             {
                 vizinho->isOpen = true;
-                openNeighbors(vizinho->cellrow, vizinho->cellcolumn, row, column, board);
+                openNeighbors(vizinho->cellrow, vizinho->cellcolumn, maxRows, maxColumns, board);
             }
             k++;
+        }
+    }
+}
+
+void checkIfItsBomb(int *gameOver, int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+{
+    if (board[selectedRow][selectedColumn].isBomb == true)
+    {
+        for (int i = 0; i < maxRows; i++)
+        {
+            for (int j = 0; j < maxColumns; j++)
+            {
+                board[i][j].isOpen = true;
+            }
+        }
+        printBoard(maxRows, maxColumns, board);
+        printf("* * BOOOOM!!! * *\nGame over! :(");
+        *gameOver = 1;
+    }
+}
+
+void checkWin(int *gameWin, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+{
+    *gameWin = 1;
+    for (int i = 0; i < maxRows; i++)
+    {
+        for (int j = 0; j < maxColumns; j++)
+        {
+            if (board[i][j].isBomb == false && board[i][j].isOpen == false)
+            {
+                *gameWin = 0;
+            }
         }
     }
 }

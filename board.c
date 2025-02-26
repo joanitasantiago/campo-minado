@@ -9,8 +9,50 @@
 
 /* * * SETTINGS * * */
 
+/*Set default settings on board and call function to assign neighbors*/
+Board* createBoard(int maxRows, int maxColumns)
+{   
+    Board *gameBoard = malloc(sizeof(Board));
+    gameBoard->maxRows = maxRows;
+    gameBoard->maxColumns = maxColumns;
+    gameBoard->cells = malloc(maxRows * sizeof(Cell*));
+    
+    for (int i = 0; i < maxRows; i++)
+    {
+        gameBoard->cells[i] = malloc(maxColumns * sizeof(Cell));
+    }
+    
+    Cell **cells = gameBoard->cells;
+    for (int i = 0; i < maxRows; i++)
+    {
+        for (int j = 0; j < maxColumns; j++)
+        {
+            cells[i][j].cellcolumn = j;
+            cells[i][j].cellrow = i;
+            cells[i][j].isBomb = false;
+            cells[i][j].isOpen = false;
+            cells[i][j].bombsAround = 0;
+        }
+    }
+
+    assignNeighbors(maxRows, maxColumns, cells);
+
+    return gameBoard;
+}
+
+/* Free the allocated memory for the board */
+void freeBoard(Board *board)
+{
+    for (int i = 0; i < board->maxRows; i++)
+    {
+        free(board->cells[i]);
+    }
+    free(board->cells);
+    free(board);
+}
+
 /*Assigns the neighbors of each cell on the board and stores them in an array.*/
-void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void assignNeighbors(int maxRows, int maxColumns, Cell **board)
 {
     for (int i = 0; i < maxRows; i++)
     {
@@ -116,7 +158,7 @@ int generateRandomColumn(int maxBombs)
     case 40:
         newColumn = (rand() % 16);
         break;
-    case 3:
+    case 99:
         newColumn = (rand() % 16);
         break;
     }
@@ -129,20 +171,19 @@ int generateRandomRow(int maxBombs)
     switch (maxBombs)
     {
     case 10:
-
         newRow = (rand() % 9);
         break;
     case 40:
         newRow = (rand() % 16);
         break;
-    case 3:
+    case 99:
         newRow = (rand() % 30);
         break;
     }
     return newRow;
 }
 
-void distributeBombs(int maxBombs, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void distributeBombs(int maxBombs, int maxRows, int maxColumns, Cell **board)
 {
     int newRow, newColumn, i = 1;
     while (i <= maxBombs)
@@ -157,21 +198,21 @@ void distributeBombs(int maxBombs, int maxRows, int maxColumns, Cell board[maxRo
     }
 }
 
-void incrementNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void incrementNeighbors(int maxRows, int maxColumns, Cell **board)
 {
-    int i, j, k = 0;
+    int i, j, k;
     for (i = 0; i < maxRows; i++)
     {
         for (j = 0; j < maxColumns; j++)
         {
             if (board[i][j].isBomb == true)
             {
+                k = 0;
                 while (board[i][j].neighbors[k] != NULL)
                 {
                     board[i][j].neighbors[k]->bombsAround++;
                     k++;
                 }
-                k = 0;
             }
         }
     }
@@ -179,7 +220,7 @@ void incrementNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColu
 
 /* * * SCREEN INTERACTIONS * * */
 
-void printBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void printBoard(int maxRows, int maxColumns, Cell **board)
 {
     printColumnPositions(maxColumns);
     printLine(maxColumns);
@@ -240,38 +281,12 @@ void printLine(int maxColumns)
 
 /* * * GAMEPLAY * * */
 
-/*Set default settings on board and call function to assign neighbors*/
-Board* createBoard(int maxRows, int maxColumns)
-{   
-    Board *gameBoard = &(Board){.maxRows = maxRows, .maxColumns = maxColumns, .cells = malloc(maxRows * sizeof(Cell))};
-    
-    for (int i = 0; i < maxRows; i++)
-    {
-        gameBoard->cells[i] = malloc(maxColumns * sizeof(Cell));
-    }
-    
-    Cell **cells = gameBoard->cells;
-    for (int i = 0; i < maxRows; i++)
-    {
-        for (int j = 0; j < maxColumns; j++)
-
-        {
-            cells[i][j].cellcolumn = j;
-            cells[i][j].cellrow = i;
-            cells[i][j].isBomb = false;
-            cells[i][j].isOpen = false;
-            cells[i][j].bombsAround = 0;
-        }
-    }
-    return gameBoard;
-}
-
-void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell **board)
 {
     board[rowToBeOpened][columnToBeOpened].isOpen = true;
 }
 
-void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell **board)
 {
     int k = 0;
     Cell atual = board[selectedRow][selectedColumn];
@@ -290,7 +305,7 @@ void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColu
     }
 }
 
-void checkIfItsBomb(int *gameOver, int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void checkIfItsBomb(int *gameOver, int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell **board)
 {
     if (board[selectedRow][selectedColumn].isBomb == true)
     {
@@ -307,7 +322,7 @@ void checkIfItsBomb(int *gameOver, int selectedRow, int selectedColumn, int maxR
     }
 }
 
-void checkWin(int *gameWin, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
+void checkWin(int *gameWin, int maxRows, int maxColumns, Cell **board)
 {
     *gameWin = 1;
     for (int i = 0; i < maxRows; i++)

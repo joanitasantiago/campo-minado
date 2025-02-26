@@ -21,7 +21,7 @@ int defineAmountOfBombs(int gameDifficulty);
 
 void playerTypesRowAndColumn(int *rowToBeOpened, int *columnToBeOpened);
 void checkValidRowAndColumn(int maxRows, int maxColumns, int *selectedRow, int *selectedColumn);
-void checkIfCellIsAlreadyOpen(int *selectedRow, int *selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
+void checkIfCellIsAlreadyOpen(int *selectedRow, int *selectedColumn, int maxRows, int maxColumns, Cell **board);
 void playAgainOrClose(int *play);
 
 #endif

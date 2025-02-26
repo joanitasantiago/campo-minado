@@ -13,7 +13,16 @@ typedef struct cell
     struct cell *neighbors[10];
 } Cell;
 
+typedef struct board
+{
+    int maxRows;
+    int maxColumns;
+    Cell **cells;
+} Board;
+
 /* * *  F U N C T I O N S * * */
+
+Board* createBoard(int maxRows, int maxColumns);
 
 /* * * SETTINGS * * */
 void assignNeighbors(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
@@ -31,7 +40,6 @@ void printRowPosition(int maxRows);
 void printLine(int maxColumns);
 
 /* * * GAMEPLAY * * */
-void setBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 void openNeighbors(int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);
 void checkIfItsBomb(int *gameover, int selectedRow, int selectedColumn, int maxRows, int maxColumns, Cell board[maxRows][maxColumns]);

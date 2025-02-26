@@ -241,20 +241,29 @@ void printLine(int maxColumns)
 /* * * GAMEPLAY * * */
 
 /*Set default settings on board and call function to assign neighbors*/
-void setBoard(int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
-{
+Board* createBoard(int maxRows, int maxColumns)
+{   
+    Board *gameBoard = &(Board){.maxRows = maxRows, .maxColumns = maxColumns, .cells = malloc(maxRows * sizeof(Cell))};
+    
+    for (int i = 0; i < maxRows; i++)
+    {
+        gameBoard->cells[i] = malloc(maxColumns * sizeof(Cell));
+    }
+    
+    Cell **cells = gameBoard->cells;
     for (int i = 0; i < maxRows; i++)
     {
         for (int j = 0; j < maxColumns; j++)
+
         {
-            board[i][j].isBomb = false;
-            board[i][j].isOpen = false;
-            board[i][j].bombsAround = 0;
-            board[i][j].cellrow = i;
-            board[i][j].cellcolumn = j;
+            cells[i][j].cellcolumn = j;
+            cells[i][j].cellrow = i;
+            cells[i][j].isBomb = false;
+            cells[i][j].isOpen = false;
+            cells[i][j].bombsAround = 0;
         }
     }
-    assignNeighbors(maxRows, maxColumns, board);
+    return gameBoard;
 }
 
 void openCellChosenbyPlayer(int rowToBeOpened, int columnToBeOpened, int maxRows, int maxColumns, Cell board[maxRows][maxColumns])
